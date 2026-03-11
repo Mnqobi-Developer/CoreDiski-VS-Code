@@ -128,3 +128,25 @@ body {
   .list-actions { flex-direction: row; min-width: 0; }
   .search-shell { flex-direction: column; }
 }
+
+.auth-page { min-height: calc(100vh - 120px); display: grid; place-items: center; padding: 30px 0 50px; }
+.auth-card { width: min(640px, 92vw); background: rgba(250,249,243,.98); border-radius: 24px; box-shadow: 0 15px 36px rgba(0,0,0,.09); padding: 84px 40px 24px; position: relative; }
+.auth-badge { position: absolute; top: -46px; left: 50%; transform: translateX(-50%); width: 110px; height: 110px; border-radius: 999px; border: 5px solid var(--green); background: #f3f0e1; box-shadow: 0 7px 16px rgba(0,0,0,.18); display: grid; place-items: center; font-weight: 800; font-size: .76rem; text-align: center; }
+.auth-card h2 { margin: 0; text-align: center; font-size: clamp(2rem, 4vw, 3.2rem); }
+.auth-card > div > p { margin: 8px 0 22px; text-align: center; color: #667d71; }
+.auth-form { display: grid; gap: 10px; }
+.auth-form label { font-weight: 700; }
+.auth-form input { border: 1px solid #d4dbd5; border-radius: 10px; padding: 14px; font-size: 1rem; }
+.auth-btn { margin-top: 8px; border: 0; border-radius: 10px; background: linear-gradient(90deg, #0f513f, #205245); color: #fff; font-weight: 700; font-size: 1.05rem; padding: 14px; cursor: pointer; }
+.auth-linkline { margin: 18px 0 8px; text-align: center; color: #5b7165; }
+.text-link { border: 0; background: transparent; color: #1f5f4f; text-decoration: underline; font-weight: 700; cursor: pointer; padding: 0; }
+.auth-footer-links { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e0e5e1; text-align: center; color: #64796d; }
+.auth-footer-links span { margin: 0 8px; color: #9eaaa3; }
+.strength { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px; }
+.strength span { height: 4px; border-radius: 999px; background: #d5dcd8; }
+.strength span.active { background: #e68a76; }
+.checkline { display: flex; gap: 8px; align-items: center; font-weight: 500 !important; color: #486457; }
+
+@media (max-width: 680px) {
+  .auth-card { padding: 74px 18px 20px; }
+}

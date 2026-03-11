@@ -14,7 +14,12 @@ type Product = {
   image: string
 }
 
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+type AppPage = 'catalog' | 'checkout' | 'favorites' | 'cart' | 'account' | 'auth'
+type AuthMode = 'signin' | 'register'
+=======
 type AppPage = 'catalog' | 'checkout' | 'favorites' | 'cart' | 'account'
+>>>>>>> master
 
 type CartItem = {
   productId: number
@@ -139,7 +144,10 @@ app.innerHTML = `
           <article class="checkout-card">
             <h3 id="selectedClub">Manchester City</h3>
             <p id="selectedTitle">Manchester City Home Jersey 2025/26</p>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+=======
 
+>>>>>>> master
             <div class="size-row">
               <p class="size-label">Size</p>
               <button class="size-guide" id="openSizeGuide" type="button">Size guide</button>
@@ -150,21 +158,30 @@ app.innerHTML = `
               <button class="size-btn" data-size="L" type="button">L</button>
               <button class="size-btn" data-size="XL" type="button">XL</button>
             </div>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+=======
 
+>>>>>>> master
             <label class="form-label">Quantity</label>
             <select id="quantitySelect" class="input-like">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+=======
 
+>>>>>>> master
             <div class="card-actions">
               <button class="small-btn" id="favoriteSelected" type="button">♡ Favorite</button>
               <button class="dark-btn" id="addSelectedToCart" type="button">＋ Add to Cart</button>
             </div>
             <p class="helper">You must be logged in to add items to cart or pay.</p>
           </article>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+=======
 
+>>>>>>> master
           <article class="checkout-card">
             <div class="summary-product">
               <img id="summaryImage" alt="Selected shirt" />
@@ -174,7 +191,10 @@ app.innerHTML = `
                 <div class="chip-row" id="summaryTags"></div>
               </div>
             </div>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+=======
 
+>>>>>>> master
             <div class="promo" id="summaryPromo">🎉 50% OFF - Original: EUR 100.00</div>
             <div class="price-lines">
               <div><span>Deal Price</span><strong id="dealPrice">EUR 50.00</strong></div>
@@ -205,7 +225,11 @@ app.innerHTML = `
           <article class="simple-card">
             <h3>Authentication</h3>
             <p id="accountStateText">You are currently signed out.</p>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+            <button class="dark-btn" id="signOutButton" type="button">Sign Out</button>
+=======
             <button class="dark-btn" id="authToggle" type="button">Sign In</button>
+>>>>>>> master
           </article>
           <article class="simple-card">
             <h3>Saved Shipping Address</h3>
@@ -220,6 +244,44 @@ app.innerHTML = `
           </article>
         </div>
       </section>
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+
+      <section class="auth-page container" id="authPage" hidden>
+        <div class="auth-card">
+          <div class="auth-badge">CORE DISKI</div>
+          <div id="signInView">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your collection</p>
+            <form id="signInForm" class="auth-form">
+              <label>Email Address</label>
+              <input type="email" placeholder="your@email.com" required />
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required />
+              <button class="auth-btn" type="submit">Sign In</button>
+            </form>
+            <p class="auth-linkline">Don't have an account? <button class="text-link" id="openRegister" type="button">Create Account</button></p>
+          </div>
+          <div id="registerView" hidden>
+            <h2>Create Your Account</h2>
+            <p>Join Core Diski to collect authentic shirts</p>
+            <form id="registerForm" class="auth-form">
+              <label>Full Name</label>
+              <input type="text" placeholder="John Doe" required />
+              <label>Email Address</label>
+              <input type="email" placeholder="your@email.com" required />
+              <label>Password</label>
+              <input id="registerPassword" type="password" placeholder="••••••••" required minlength="8" />
+              <div class="strength" id="passwordStrength"><span></span><span></span><span></span><span></span></div>
+              <label class="checkline"><input type="checkbox" required /> I agree to the <strong>Terms & Conditions</strong></label>
+              <button class="auth-btn" type="submit">Create Account</button>
+            </form>
+            <p class="auth-linkline">Already have an account? <button class="text-link" id="openSignIn" type="button">Sign In</button></p>
+          </div>
+          <div class="auth-footer-links">About Us <span>|</span> FAQs <span>|</span> Contact <span>|</span> Privacy Policy</div>
+        </div>
+      </section>
+=======
+>>>>>>> master
     </main>
   </div>
 
@@ -237,10 +299,17 @@ const searchButton = document.getElementById('searchButton') as HTMLButtonElemen
 const cartButton = document.getElementById('cartButton') as HTMLButtonElement
 const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
 const accountButton = document.getElementById('accountButton') as HTMLButtonElement
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
+const adminPanel = document.getElementById('adminPanel') as HTMLElement
+const accountStateText = document.getElementById('accountStateText') as HTMLElement
+const signOutButton = document.getElementById('signOutButton') as HTMLButtonElement
+=======
 const authToggle = document.getElementById('authToggle') as HTMLButtonElement
 const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
 const accountStateText = document.getElementById('accountStateText') as HTMLElement
+>>>>>>> master
 
 const pages: Record<AppPage, HTMLElement> = {
   catalog: document.getElementById('catalogPage') as HTMLElement,
@@ -248,6 +317,10 @@ const pages: Record<AppPage, HTMLElement> = {
   favorites: document.getElementById('favoritesPage') as HTMLElement,
   cart: document.getElementById('cartPage') as HTMLElement,
   account: document.getElementById('accountPage') as HTMLElement,
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+  auth: document.getElementById('authPage') as HTMLElement,
+=======
+>>>>>>> master
 }
 
 const favoritesList = document.getElementById('favoritesList') as HTMLElement
@@ -262,6 +335,14 @@ let selectedSize = 'S'
 const favoriteIds = new Set<number>()
 const cartItems: CartItem[] = []
 
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+const setAuthMode = (mode: AuthMode) => {
+  ;(document.getElementById('signInView') as HTMLElement).hidden = mode !== 'signin'
+  ;(document.getElementById('registerView') as HTMLElement).hidden = mode !== 'register'
+}
+
+=======
+>>>>>>> master
 const showPage = (page: AppPage) => {
   Object.values(pages).forEach((section) => {
     section.hidden = true
@@ -272,7 +353,11 @@ const showPage = (page: AppPage) => {
   if (page === 'catalog' || page === 'checkout') homeButton.classList.add('active')
   if (page === 'favorites') favoritesButton.classList.add('active')
   if (page === 'cart') cartButton.classList.add('active')
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+  if (page === 'account' || page === 'auth') accountButton.classList.add('active')
+=======
   if (page === 'account') accountButton.classList.add('active')
+>>>>>>> master
 
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -406,6 +491,10 @@ renderSummary()
 renderFavorites()
 renderCart()
 updateIconCounters()
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+setAuthMode('signin')
+=======
+>>>>>>> master
 
 homeButton.addEventListener('click', () => showPage('catalog'))
 searchButton.addEventListener('click', () => showPage('catalog'))
@@ -417,7 +506,18 @@ cartButton.addEventListener('click', () => {
   renderCart()
   showPage('cart')
 })
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+accountButton.addEventListener('click', () => {
+  if (!isLoggedIn) {
+    setAuthMode('signin')
+    showPage('auth')
+    return
+  }
+  showPage('account')
+})
+=======
 accountButton.addEventListener('click', () => showPage('account'))
+>>>>>>> master
 
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
@@ -464,7 +564,12 @@ document.addEventListener('click', (event) => {
 
 adminToggle.addEventListener('click', () => {
   if (!isLoggedIn) {
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+    setAuthMode('signin')
+    showPage('auth')
+=======
     alert('Log in first to access the admin portal.')
+>>>>>>> master
     return
   }
   isAdmin = !isAdmin
@@ -473,12 +578,51 @@ adminToggle.addEventListener('click', () => {
   showPage('catalog')
 })
 
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+signOutButton.addEventListener('click', () => {
+  isLoggedIn = false
+  accountStateText.textContent = 'You are currently signed out.'
+  showPage('auth')
+})
+
+;(document.getElementById('openRegister') as HTMLButtonElement).addEventListener('click', () => {
+  setAuthMode('register')
+})
+
+;(document.getElementById('openSignIn') as HTMLButtonElement).addEventListener('click', () => {
+  setAuthMode('signin')
+})
+
+;(document.getElementById('signInForm') as HTMLFormElement).addEventListener('submit', (event) => {
+  event.preventDefault()
+  isLoggedIn = true
+  accountStateText.textContent = 'You are signed in and can checkout.'
+  showPage('account')
+})
+
+;(document.getElementById('registerForm') as HTMLFormElement).addEventListener('submit', (event) => {
+  event.preventDefault()
+  isLoggedIn = true
+  accountStateText.textContent = 'You are signed in and can checkout.'
+  showPage('account')
+})
+
+const registerPassword = document.getElementById('registerPassword') as HTMLInputElement
+registerPassword.addEventListener('input', () => {
+  const checks = [registerPassword.value.length >= 8, /\d/.test(registerPassword.value), /[A-Z]/.test(registerPassword.value)]
+  const score = checks.filter(Boolean).length
+  document.querySelectorAll('#passwordStrength span').forEach((bar, i) => {
+    const item = bar as HTMLElement
+    item.classList.toggle('active', i < score + 1)
+  })
+=======
 authToggle.addEventListener('click', () => {
   isLoggedIn = !isLoggedIn
   authToggle.textContent = isLoggedIn ? 'Sign Out' : 'Sign In'
   accountStateText.textContent = isLoggedIn
     ? 'You are signed in and can checkout.'
     : 'You are currently signed out.'
+>>>>>>> master
 })
 
 ;(document.getElementById('favoriteSelected') as HTMLButtonElement).addEventListener('click', () => {
@@ -493,7 +637,12 @@ authToggle.addEventListener('click', () => {
 
 ;(document.getElementById('addSelectedToCart') as HTMLButtonElement).addEventListener('click', () => {
   if (!isLoggedIn) {
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+    setAuthMode('signin')
+    showPage('auth')
+=======
     alert('Please log in or register before adding to cart.')
+>>>>>>> master
     return
   }
 
@@ -504,7 +653,12 @@ authToggle.addEventListener('click', () => {
 
 ;(document.getElementById('payButton') as HTMLButtonElement).addEventListener('click', () => {
   if (!isLoggedIn) {
+<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
+    setAuthMode('signin')
+    showPage('auth')
+=======
     alert('Please log in or register before checkout.')
+>>>>>>> master
     return
   }
   showPage('cart')
