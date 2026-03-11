@@ -459,6 +459,11 @@ setAuthMode('signin')
 
 if (window.location.hash === '#/auth') {
   showPage('auth')
+<<<<<<< codex/pull-latest-changes-from-repository-p04n5r
+} else {
+  showPage('catalog')
+=======
+>>>>>>> master
 }
 
 homeButton.addEventListener('click', () => showPage('catalog'))

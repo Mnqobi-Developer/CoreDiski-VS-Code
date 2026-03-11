@@ -159,3 +159,15 @@ body.auth-route .auth-card { margin-top: 20px; }
 .prompt-dialog p { margin: 0 0 14px; color: #5f7568; }
 .prompt-actions { display: flex; gap: 10px; justify-content: flex-end; }
 .prompt-dialog::backdrop { background: rgba(0, 0, 0, 0.4); }
+
+/* Keep auth UI off the catalog surface; only show as dedicated auth route */
+.page main > .auth-page { display: none; }
+body.auth-route .auth-page {
+  display: grid !important;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow-y: auto;
+  background: radial-gradient(circle at 1px 1px, rgba(14, 91, 70, 0.05) 1px, transparent 0) 0 0 / 28px 28px,
+    var(--bg);
+}
