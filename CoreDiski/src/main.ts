@@ -140,10 +140,7 @@ app.innerHTML = `
           <article class="checkout-card">
             <h3 id="selectedClub">Manchester City</h3>
             <p id="selectedTitle">Manchester City Home Jersey 2025/26</p>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
-=======
 
->>>>>>> master
             <div class="size-row">
               <p class="size-label">Size</p>
               <button class="size-guide" id="openSizeGuide" type="button">Size guide</button>
@@ -154,30 +151,21 @@ app.innerHTML = `
               <button class="size-btn" data-size="L" type="button">L</button>
               <button class="size-btn" data-size="XL" type="button">XL</button>
             </div>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
-=======
 
->>>>>>> master
             <label class="form-label">Quantity</label>
             <select id="quantitySelect" class="input-like">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
-=======
 
->>>>>>> master
             <div class="card-actions">
               <button class="small-btn" id="favoriteSelected" type="button">♡ Favorite</button>
               <button class="dark-btn" id="addSelectedToCart" type="button">＋ Add to Cart</button>
             </div>
             <p class="helper">You must be logged in to add items to cart or pay.</p>
           </article>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
-=======
 
->>>>>>> master
           <article class="checkout-card">
             <div class="summary-product">
               <img id="summaryImage" alt="Selected shirt" />
@@ -187,10 +175,7 @@ app.innerHTML = `
                 <div class="chip-row" id="summaryTags"></div>
               </div>
             </div>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
-=======
 
->>>>>>> master
             <div class="promo" id="summaryPromo">🎉 50% OFF - Original: EUR 100.00</div>
             <div class="price-lines">
               <div><span>Deal Price</span><strong id="dealPrice">EUR 50.00</strong></div>
@@ -221,11 +206,9 @@ app.innerHTML = `
           <article class="simple-card">
             <h3>Authentication</h3>
             <p id="accountStateText">You are currently signed out.</p>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
             <button class="dark-btn" id="signOutButton" type="button">Sign Out</button>
-=======
-            <button class="dark-btn" id="authToggle" type="button">Sign In</button>
->>>>>>> master
+            <button class="dark-btn" id="signOutButton" type="button">Sign Out</button>
+
           </article>
           <article class="simple-card">
             <h3>Saved Shipping Address</h3>
@@ -284,6 +267,15 @@ app.innerHTML = `
     <p>Tip: For a relaxed fit, choose one size up.</p>
     <button id="closeSizeGuide" class="dark-btn" type="button">Close</button>
   </dialog>
+
+  <dialog id="signInPromptDialog" class="prompt-dialog">
+    <h3>Sign in required</h3>
+    <p>Please sign in or create an account before adding items to your cart.</p>
+    <div class="prompt-actions">
+      <button id="closeSignInPrompt" class="small-btn" type="button">Not now</button>
+      <button id="goToSignIn" class="dark-btn" type="button">Go to Sign In</button>
+    </div>
+  </dialog>
 `
 
 const dealGrid = document.getElementById('dealGrid') as HTMLElement
@@ -296,6 +288,7 @@ const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
 const accountStateText = document.getElementById('accountStateText') as HTMLElement
 const signOutButton = document.getElementById('signOutButton') as HTMLButtonElement
+const topNav = document.querySelector('.top-nav') as HTMLElement
 
 const pages: Record<AppPage, HTMLElement> = {
   catalog: document.getElementById('catalogPage') as HTMLElement,
@@ -308,6 +301,7 @@ const pages: Record<AppPage, HTMLElement> = {
 
 const favoritesList = document.getElementById('favoritesList') as HTMLElement
 const cartList = document.getElementById('cartList') as HTMLElement
+const signInPromptDialog = document.getElementById('signInPromptDialog') as HTMLDialogElement
 
 let cartCount = 0
 let favoriteCount = 0
@@ -328,6 +322,10 @@ const showPage = (page: AppPage) => {
     section.hidden = true
   })
   pages[page].hidden = false
+
+  topNav.hidden = page === 'auth'
+  document.body.classList.toggle('auth-route', page === 'auth')
+  window.history.replaceState(null, '', `#/${page}`)
 
   document.querySelectorAll('.icon-btn').forEach((button) => button.classList.remove('active'))
   if (page === 'catalog' || page === 'checkout') homeButton.classList.add('active')
@@ -469,6 +467,10 @@ renderCart()
 updateIconCounters()
 setAuthMode('signin')
 
+if (window.location.hash === '#/auth') {
+  showPage('auth')
+}
+
 homeButton.addEventListener('click', () => showPage('catalog'))
 searchButton.addEventListener('click', () => showPage('catalog'))
 favoritesButton.addEventListener('click', () => {
@@ -593,8 +595,7 @@ registerPassword.addEventListener('input', () => {
 
 ;(document.getElementById('addSelectedToCart') as HTMLButtonElement).addEventListener('click', () => {
   if (!isLoggedIn) {
-    setAuthMode('signin')
-    showPage('auth')
+    signInPromptDialog.showModal()
     return
   }
 
@@ -652,4 +653,15 @@ const sizeGuideDialog = document.getElementById('sizeGuideDialog') as HTMLDialog
 })
 ;(document.getElementById('closeSizeGuide') as HTMLButtonElement).addEventListener('click', () => {
   sizeGuideDialog.close()
+})
+
+
+;(document.getElementById('closeSignInPrompt') as HTMLButtonElement).addEventListener('click', () => {
+  signInPromptDialog.close()
+})
+
+;(document.getElementById('goToSignIn') as HTMLButtonElement).addEventListener('click', () => {
+  signInPromptDialog.close()
+  setAuthMode('signin')
+  showPage('auth')
 })
