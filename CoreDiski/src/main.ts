@@ -88,7 +88,6 @@ app.innerHTML = `
           <button class="icon-btn" id="searchButton" title="Search">⌕</button>
           <button class="icon-btn" id="cartButton" title="Cart">🛒 0</button>
           <button class="icon-btn" id="favoritesButton" title="Favorites">♡ 0</button>
-          <button class="icon-btn" id="accountButton" title="Account">👤</button>
           <button class="icon-btn" id="adminToggle" title="Admin">⚙</button>
         </nav>
       </div>
@@ -140,7 +139,6 @@ app.innerHTML = `
           <article class="checkout-card">
             <h3 id="selectedClub">Manchester City</h3>
             <p id="selectedTitle">Manchester City Home Jersey 2025/26</p>
-
             <div class="size-row">
               <p class="size-label">Size</p>
               <button class="size-guide" id="openSizeGuide" type="button">Size guide</button>
@@ -151,21 +149,18 @@ app.innerHTML = `
               <button class="size-btn" data-size="L" type="button">L</button>
               <button class="size-btn" data-size="XL" type="button">XL</button>
             </div>
-
             <label class="form-label">Quantity</label>
             <select id="quantitySelect" class="input-like">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
-
             <div class="card-actions">
               <button class="small-btn" id="favoriteSelected" type="button">♡ Favorite</button>
               <button class="dark-btn" id="addSelectedToCart" type="button">＋ Add to Cart</button>
             </div>
             <p class="helper">You must be logged in to add items to cart or pay.</p>
           </article>
-
           <article class="checkout-card">
             <div class="summary-product">
               <img id="summaryImage" alt="Selected shirt" />
@@ -175,7 +170,6 @@ app.innerHTML = `
                 <div class="chip-row" id="summaryTags"></div>
               </div>
             </div>
-
             <div class="promo" id="summaryPromo">🎉 50% OFF - Original: EUR 100.00</div>
             <div class="price-lines">
               <div><span>Deal Price</span><strong id="dealPrice">EUR 50.00</strong></div>
@@ -207,8 +201,6 @@ app.innerHTML = `
             <h3>Authentication</h3>
             <p id="accountStateText">You are currently signed out.</p>
             <button class="dark-btn" id="signOutButton" type="button">Sign Out</button>
-            <button class="dark-btn" id="signOutButton" type="button">Sign Out</button>
-
           </article>
           <article class="simple-card">
             <h3>Saved Shipping Address</h3>
@@ -283,7 +275,6 @@ const homeButton = document.getElementById('homeButton') as HTMLButtonElement
 const searchButton = document.getElementById('searchButton') as HTMLButtonElement
 const cartButton = document.getElementById('cartButton') as HTMLButtonElement
 const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
-const accountButton = document.getElementById('accountButton') as HTMLButtonElement
 const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
 const accountStateText = document.getElementById('accountStateText') as HTMLElement
@@ -331,7 +322,6 @@ const showPage = (page: AppPage) => {
   if (page === 'catalog' || page === 'checkout') homeButton.classList.add('active')
   if (page === 'favorites') favoritesButton.classList.add('active')
   if (page === 'cart') cartButton.classList.add('active')
-  if (page === 'account' || page === 'auth') accountButton.classList.add('active')
 
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -481,15 +471,6 @@ cartButton.addEventListener('click', () => {
   renderCart()
   showPage('cart')
 })
-accountButton.addEventListener('click', () => {
-  if (!isLoggedIn) {
-    setAuthMode('signin')
-    showPage('auth')
-    return
-  }
-  showPage('account')
-})
-
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
 
