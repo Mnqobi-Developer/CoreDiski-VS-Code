@@ -75,7 +75,7 @@ app.innerHTML = `
           </div>
         </div>
         <nav class="icon-nav" aria-label="Main navigation">
-          <button class="icon-btn active">⌂</button>
+          <button class="icon-btn active" id="homeButton">⌂</button>
           <button class="icon-btn">⌕</button>
           <button class="icon-btn" id="cartButton">🛒</button>
           <button class="icon-btn" id="favoritesButton">♡</button>
@@ -86,29 +86,43 @@ app.innerHTML = `
     </header>
 
     <main>
-      <section class="hero container">
-        <div class="hero-logo">CORE DISKI</div>
-        <h1>Authentic Football Shirts</h1>
-        <p>Discover rare, verified jerseys from every club and nation worldwide.<br/>Heritage. Authenticity. Passion.</p>
-        <form class="search-shell" id="searchForm">
-          <input id="searchInput" type="search" placeholder="Search teams, leagues, or players..." />
-          <button type="submit">Search</button>
-        </form>
-      </section>
+      <section id="catalogPage">
+        <section class="hero container">
+          <div class="hero-logo">CORE DISKI</div>
+          <h1>Authentic Football Shirts</h1>
+          <p>Discover rare, verified jerseys from every club and nation worldwide.<br/>Heritage. Authenticity. Passion.</p>
+          <form class="search-shell" id="searchForm">
+            <input id="searchInput" type="search" placeholder="Search teams, leagues, or players..." />
+            <button type="submit">Search</button>
+          </form>
+        </section>
 
-      <section class="deals container">
-        <div class="section-head">
-          <div>
-            <h2>🔥 Official Deals</h2>
-            <p>Verified discounts from official stores - Buy safely through CoreDiski</p>
+        <section class="deals container">
+          <div class="section-head">
+            <div>
+              <h2>🔥 Official Deals</h2>
+              <p>Verified discounts from official stores - Buy safely through CoreDiski</p>
+            </div>
+            <button class="ghost-btn" type="button">View All</button>
           </div>
-          <button class="ghost-btn">View All</button>
-        </div>
-        <div class="card-grid" id="dealGrid"></div>
+          <div class="card-grid" id="dealGrid"></div>
+        </section>
+
+        <section class="admin-panel container" id="adminPanel" hidden>
+          <h2>Administration Portal</h2>
+          <p>Add shirts to the catalog as an administrator.</p>
+          <form id="adminForm" class="admin-form">
+            <input name="club" placeholder="Club name" required />
+            <input name="title" placeholder="Shirt title" required />
+            <input name="price" placeholder="Price (e.g. EUR 99.99)" required />
+            <input name="supplier" placeholder="Official supplier" required />
+            <button type="submit">Add Shirt</button>
+          </form>
+        </section>
       </section>
 
-      <section class="checkout container" id="checkoutSection">
-        <button class="back-link" id="backToDeals">← Back</button>
+      <section class="checkout container" id="checkoutPage" hidden>
+        <button class="back-link" id="backToDeals" type="button">← Back</button>
         <div class="checkout-heads">
           <h2>Product Selection</h2>
           <h2>Order Summary</h2>
@@ -122,7 +136,7 @@ app.innerHTML = `
               <p class="size-label">Size</p>
               <button class="size-guide" id="openSizeGuide" type="button">Size guide</button>
             </div>
-            <div class="sizes" id="sizeButtons">
+            <div class="sizes">
               <button class="size-btn active" data-size="S" type="button">S</button>
               <button class="size-btn" data-size="M" type="button">M</button>
               <button class="size-btn" data-size="L" type="button">L</button>
@@ -136,7 +150,7 @@ app.innerHTML = `
               <option value="3">3</option>
             </select>
 
-            <button class="dark-btn full" id="addSelectedToCart">＋ Add to Cart</button>
+            <button class="dark-btn full" id="addSelectedToCart" type="button">＋ Add to Cart</button>
             <p class="helper">You must be logged in to add items to cart or pay.</p>
           </article>
 
@@ -151,35 +165,20 @@ app.innerHTML = `
             </div>
 
             <div class="promo" id="summaryPromo">🎉 50% OFF - Original: EUR 100.00</div>
-
             <div class="price-lines">
               <div><span>Deal Price</span><strong id="dealPrice">EUR 50.00</strong></div>
               <div><span>CoreDiski Service Fee (10%)</span><strong id="feePrice">EUR 5.00</strong></div>
               <div class="total"><span>Total</span><strong id="totalPrice">EUR 55.00</strong></div>
             </div>
-
             <div class="source">🛡 Sourced from: <span id="summarySupplier">mancity.com</span></div>
             <ul class="benefits">
               <li>Authenticity Verified</li>
               <li>Secure Payment Processing</li>
               <li>Buyer Protection Included</li>
             </ul>
-
-            <button class="pay-btn" id="payButton">Pay EUR 55.00</button>
+            <button class="pay-btn" id="payButton" type="button">Pay EUR 55.00</button>
           </article>
         </div>
-      </section>
-
-      <section class="admin-panel container" id="adminPanel" hidden>
-        <h2>Administration Portal</h2>
-        <p>Add shirts to the catalog as an administrator.</p>
-        <form id="adminForm" class="admin-form">
-          <input name="club" placeholder="Club name" required />
-          <input name="title" placeholder="Shirt title" required />
-          <input name="price" placeholder="Price (e.g. EUR 99.99)" required />
-          <input name="supplier" placeholder="Official supplier" required />
-          <button type="submit">Add Shirt</button>
-        </form>
       </section>
     </main>
   </div>
@@ -193,12 +192,14 @@ app.innerHTML = `
 `
 
 const dealGrid = document.getElementById('dealGrid')
+const catalogPage = document.getElementById('catalogPage') as HTMLElement
+const checkoutPage = document.getElementById('checkoutPage') as HTMLElement
+const homeButton = document.getElementById('homeButton') as HTMLButtonElement
 const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
 const cartButton = document.getElementById('cartButton') as HTMLButtonElement
 const authToggle = document.getElementById('authToggle') as HTMLButtonElement
 const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
-const checkoutSection = document.getElementById('checkoutSection') as HTMLElement
 
 let cartCount = 0
 let favoriteCount = 0
@@ -206,6 +207,18 @@ let isLoggedIn = false
 let isAdmin = false
 let selectedProduct = products[1]
 let selectedSize = 'S'
+
+const openCheckoutPage = () => {
+  catalogPage.hidden = true
+  checkoutPage.hidden = false
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+const openCatalogPage = () => {
+  checkoutPage.hidden = true
+  catalogPage.hidden = false
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 const updateIconCounters = () => {
   cartButton.textContent = `🛒 ${cartCount}`
@@ -280,7 +293,7 @@ document.addEventListener('click', (event) => {
     if (!found) return
     selectedProduct = found
     renderSummary()
-    checkoutSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    openCheckoutPage()
   }
 
   if (target.classList.contains('size-btn')) {
@@ -290,6 +303,10 @@ document.addEventListener('click', (event) => {
     selectedSize = target.getAttribute('data-size') || 'S'
     renderSummary()
   }
+})
+
+homeButton.addEventListener('click', () => {
+  openCatalogPage()
 })
 
 authToggle.addEventListener('click', () => {
@@ -330,7 +347,7 @@ adminToggle.addEventListener('click', () => {
 })
 
 ;(document.getElementById('backToDeals') as HTMLButtonElement).addEventListener('click', () => {
-  document.querySelector('.deals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  openCatalogPage()
 })
 
 const searchForm = document.getElementById('searchForm') as HTMLFormElement
