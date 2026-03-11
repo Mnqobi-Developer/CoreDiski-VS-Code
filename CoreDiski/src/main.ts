@@ -14,6 +14,14 @@ type Product = {
   image: string
 }
 
+type AppPage = 'catalog' | 'checkout' | 'favorites' | 'cart' | 'account'
+
+type CartItem = {
+  productId: number
+  size: string
+  qty: number
+}
+
 const products: Product[] = [
   {
     id: 1,
@@ -75,12 +83,12 @@ app.innerHTML = `
           </div>
         </div>
         <nav class="icon-nav" aria-label="Main navigation">
-          <button class="icon-btn active" id="homeButton">⌂</button>
-          <button class="icon-btn">⌕</button>
-          <button class="icon-btn" id="cartButton">🛒</button>
-          <button class="icon-btn" id="favoritesButton">♡</button>
-          <button class="icon-btn" id="authToggle">👤</button>
-          <button class="icon-btn" id="adminToggle">⚙</button>
+          <button class="icon-btn active" id="homeButton" title="Home">⌂</button>
+          <button class="icon-btn" id="searchButton" title="Search">⌕</button>
+          <button class="icon-btn" id="cartButton" title="Cart">🛒 0</button>
+          <button class="icon-btn" id="favoritesButton" title="Favorites">♡ 0</button>
+          <button class="icon-btn" id="accountButton" title="Account">👤</button>
+          <button class="icon-btn" id="adminToggle" title="Admin">⚙</button>
         </nav>
       </div>
     </header>
@@ -150,7 +158,10 @@ app.innerHTML = `
               <option value="3">3</option>
             </select>
 
-            <button class="dark-btn full" id="addSelectedToCart" type="button">＋ Add to Cart</button>
+            <div class="card-actions">
+              <button class="small-btn" id="favoriteSelected" type="button">♡ Favorite</button>
+              <button class="dark-btn" id="addSelectedToCart" type="button">＋ Add to Cart</button>
+            </div>
             <p class="helper">You must be logged in to add items to cart or pay.</p>
           </article>
 
@@ -170,13 +181,42 @@ app.innerHTML = `
               <div><span>CoreDiski Service Fee (10%)</span><strong id="feePrice">EUR 5.00</strong></div>
               <div class="total"><span>Total</span><strong id="totalPrice">EUR 55.00</strong></div>
             </div>
-            <div class="source">🛡 Sourced from: <span id="summarySupplier">mancity.com</span></div>
-            <ul class="benefits">
-              <li>Authenticity Verified</li>
-              <li>Secure Payment Processing</li>
-              <li>Buyer Protection Included</li>
-            </ul>
             <button class="pay-btn" id="payButton" type="button">Pay EUR 55.00</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-panel container" id="favoritesPage" hidden>
+        <h2>My Favorites</h2>
+        <p>Shirts you saved for later.</p>
+        <div class="list-wrap" id="favoritesList"></div>
+      </section>
+
+      <section class="page-panel container" id="cartPage" hidden>
+        <h2>My Cart</h2>
+        <p>Review items before checkout.</p>
+        <div class="list-wrap" id="cartList"></div>
+      </section>
+
+      <section class="page-panel container" id="accountPage" hidden>
+        <h2>My Account</h2>
+        <p>Manage login status, shipping details, and profile preferences.</p>
+        <div class="account-grid">
+          <article class="simple-card">
+            <h3>Authentication</h3>
+            <p id="accountStateText">You are currently signed out.</p>
+            <button class="dark-btn" id="authToggle" type="button">Sign In</button>
+          </article>
+          <article class="simple-card">
+            <h3>Saved Shipping Address</h3>
+            <p>John Doe</p>
+            <p>123 Main St, Johannesburg, 2000</p>
+            <p>South Africa · +27 123 456 789</p>
+          </article>
+          <article class="simple-card">
+            <h3>Preferences</h3>
+            <p>Favorite clubs: Manchester City, Barcelona</p>
+            <p>Alerts: Weekly price drops</p>
           </article>
         </div>
       </section>
@@ -191,15 +231,27 @@ app.innerHTML = `
   </dialog>
 `
 
-const dealGrid = document.getElementById('dealGrid')
-const catalogPage = document.getElementById('catalogPage') as HTMLElement
-const checkoutPage = document.getElementById('checkoutPage') as HTMLElement
+const dealGrid = document.getElementById('dealGrid') as HTMLElement
 const homeButton = document.getElementById('homeButton') as HTMLButtonElement
-const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
+const searchButton = document.getElementById('searchButton') as HTMLButtonElement
 const cartButton = document.getElementById('cartButton') as HTMLButtonElement
+const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
+const accountButton = document.getElementById('accountButton') as HTMLButtonElement
 const authToggle = document.getElementById('authToggle') as HTMLButtonElement
 const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
+const accountStateText = document.getElementById('accountStateText') as HTMLElement
+
+const pages: Record<AppPage, HTMLElement> = {
+  catalog: document.getElementById('catalogPage') as HTMLElement,
+  checkout: document.getElementById('checkoutPage') as HTMLElement,
+  favorites: document.getElementById('favoritesPage') as HTMLElement,
+  cart: document.getElementById('cartPage') as HTMLElement,
+  account: document.getElementById('accountPage') as HTMLElement,
+}
+
+const favoritesList = document.getElementById('favoritesList') as HTMLElement
+const cartList = document.getElementById('cartList') as HTMLElement
 
 let cartCount = 0
 let favoriteCount = 0
@@ -207,22 +259,87 @@ let isLoggedIn = false
 let isAdmin = false
 let selectedProduct = products[1]
 let selectedSize = 'S'
+const favoriteIds = new Set<number>()
+const cartItems: CartItem[] = []
 
-const openCheckoutPage = () => {
-  catalogPage.hidden = true
-  checkoutPage.hidden = false
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+const showPage = (page: AppPage) => {
+  Object.values(pages).forEach((section) => {
+    section.hidden = true
+  })
+  pages[page].hidden = false
 
-const openCatalogPage = () => {
-  checkoutPage.hidden = true
-  catalogPage.hidden = false
+  document.querySelectorAll('.icon-btn').forEach((button) => button.classList.remove('active'))
+  if (page === 'catalog' || page === 'checkout') homeButton.classList.add('active')
+  if (page === 'favorites') favoritesButton.classList.add('active')
+  if (page === 'cart') cartButton.classList.add('active')
+  if (page === 'account') accountButton.classList.add('active')
+
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 const updateIconCounters = () => {
+  cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0)
+  favoriteCount = favoriteIds.size
   cartButton.textContent = `🛒 ${cartCount}`
   favoritesButton.textContent = `♡ ${favoriteCount}`
+}
+
+const renderFavorites = () => {
+  const entries = products.filter((product) => favoriteIds.has(product.id))
+  if (entries.length === 0) {
+    favoritesList.innerHTML = '<p class="empty-copy">No favorites yet. Save shirts to see them here.</p>'
+    return
+  }
+
+  favoritesList.innerHTML = entries
+    .map(
+      (product) => `
+      <article class="list-item">
+        <img src="${product.image}" alt="${product.club}" />
+        <div>
+          <h3>${product.club}</h3>
+          <p>${product.title}</p>
+          <p><strong>${fmtMoney(product, product.price)}</strong></p>
+        </div>
+        <div class="list-actions">
+          <button class="small-btn remove-favorite" data-id="${product.id}" type="button">Remove</button>
+          <button class="small-btn select-product" data-id="${product.id}" type="button">View</button>
+        </div>
+      </article>
+    `,
+    )
+    .join('')
+}
+
+const renderCart = () => {
+  if (cartItems.length === 0) {
+    cartList.innerHTML = '<p class="empty-copy">Your cart is empty. Add shirts from deals or checkout.</p>'
+    return
+  }
+
+  const lines = cartItems
+    .map((item) => {
+      const product = products.find((entry) => entry.id === item.productId)
+      if (!product) return ''
+      const lineTotal = product.price * item.qty
+      return `
+        <article class="list-item">
+          <img src="${product.image}" alt="${product.club}" />
+          <div>
+            <h3>${product.club}</h3>
+            <p>${product.title}</p>
+            <p>Size: ${item.size} · Qty: ${item.qty}</p>
+            <p><strong>${fmtMoney(product, lineTotal)}</strong></p>
+          </div>
+          <div class="list-actions">
+            <button class="small-btn remove-cart" data-id="${product.id}" type="button">Remove</button>
+          </div>
+        </article>
+      `
+    })
+    .join('')
+
+  cartList.innerHTML = `${lines}<div class="cart-total">Cart total items: ${cartCount}</div>`
 }
 
 const renderSummary = () => {
@@ -236,7 +353,6 @@ const renderSummary = () => {
   ;(document.getElementById('summaryClub') as HTMLElement).textContent = selectedProduct.club
   ;(document.getElementById('summaryTitle') as HTMLElement).textContent = selectedProduct.title
   ;(document.getElementById('summaryImage') as HTMLImageElement).src = selectedProduct.image
-  ;(document.getElementById('summarySupplier') as HTMLElement).textContent = selectedProduct.supplier
   ;(document.getElementById('summaryPromo') as HTMLElement).textContent = `🎉 ${selectedProduct.badge} - Original: ${fmtMoney(selectedProduct, selectedProduct.oldPrice)}`
   ;(document.getElementById('dealPrice') as HTMLElement).textContent = fmtMoney(selectedProduct, deal)
   ;(document.getElementById('feePrice') as HTMLElement).textContent = fmtMoney(selectedProduct, fee)
@@ -249,7 +365,6 @@ const renderSummary = () => {
 }
 
 const renderProducts = () => {
-  if (!dealGrid) return
   dealGrid.innerHTML = products
     .map(
       (product) => `
@@ -266,7 +381,7 @@ const renderProducts = () => {
         <p class="meta">Detected: ${product.date}</p>
         <p class="meta">Official: ${product.supplier}</p>
         <div class="card-actions">
-          <button class="small-btn favorite" type="button">♡ Favorite</button>
+          <button class="small-btn favorite" data-id="${product.id}" type="button">♡ Favorite</button>
           <button class="small-btn select-product" data-id="${product.id}" type="button">Select Shirt</button>
         </div>
       </article>
@@ -275,16 +390,50 @@ const renderProducts = () => {
     .join('')
 }
 
+const addProductToCart = (productId: number, size: string, qty: number) => {
+  const existing = cartItems.find((item) => item.productId === productId && item.size === size)
+  if (existing) {
+    existing.qty += qty
+  } else {
+    cartItems.push({ productId, size, qty })
+  }
+  updateIconCounters()
+  renderCart()
+}
+
 renderProducts()
-updateIconCounters()
 renderSummary()
+renderFavorites()
+renderCart()
+updateIconCounters()
+
+homeButton.addEventListener('click', () => showPage('catalog'))
+searchButton.addEventListener('click', () => showPage('catalog'))
+favoritesButton.addEventListener('click', () => {
+  renderFavorites()
+  showPage('favorites')
+})
+cartButton.addEventListener('click', () => {
+  renderCart()
+  showPage('cart')
+})
+accountButton.addEventListener('click', () => showPage('account'))
 
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
 
   if (target.classList.contains('favorite')) {
-    favoriteCount += 1
+    const id = Number(target.getAttribute('data-id'))
+    favoriteIds.add(id)
     updateIconCounters()
+    renderFavorites()
+  }
+
+  if (target.classList.contains('remove-favorite')) {
+    const id = Number(target.getAttribute('data-id'))
+    favoriteIds.delete(id)
+    updateIconCounters()
+    renderFavorites()
   }
 
   if (target.classList.contains('select-product')) {
@@ -293,7 +442,7 @@ document.addEventListener('click', (event) => {
     if (!found) return
     selectedProduct = found
     renderSummary()
-    openCheckoutPage()
+    showPage('checkout')
   }
 
   if (target.classList.contains('size-btn')) {
@@ -303,15 +452,14 @@ document.addEventListener('click', (event) => {
     selectedSize = target.getAttribute('data-size') || 'S'
     renderSummary()
   }
-})
 
-homeButton.addEventListener('click', () => {
-  openCatalogPage()
-})
-
-authToggle.addEventListener('click', () => {
-  isLoggedIn = !isLoggedIn
-  authToggle.textContent = isLoggedIn ? '✅' : '👤'
+  if (target.classList.contains('remove-cart')) {
+    const productId = Number(target.getAttribute('data-id'))
+    const index = cartItems.findIndex((item) => item.productId === productId)
+    if (index >= 0) cartItems.splice(index, 1)
+    updateIconCounters()
+    renderCart()
+  }
 })
 
 adminToggle.addEventListener('click', () => {
@@ -322,6 +470,21 @@ adminToggle.addEventListener('click', () => {
   isAdmin = !isAdmin
   adminPanel.hidden = !isAdmin
   adminToggle.textContent = isAdmin ? '🛠' : '⚙'
+  showPage('catalog')
+})
+
+authToggle.addEventListener('click', () => {
+  isLoggedIn = !isLoggedIn
+  authToggle.textContent = isLoggedIn ? 'Sign Out' : 'Sign In'
+  accountStateText.textContent = isLoggedIn
+    ? 'You are signed in and can checkout.'
+    : 'You are currently signed out.'
+})
+
+;(document.getElementById('favoriteSelected') as HTMLButtonElement).addEventListener('click', () => {
+  favoriteIds.add(selectedProduct.id)
+  updateIconCounters()
+  renderFavorites()
 })
 
 ;(document.getElementById('quantitySelect') as HTMLSelectElement).addEventListener('change', () => {
@@ -333,8 +496,9 @@ adminToggle.addEventListener('click', () => {
     alert('Please log in or register before adding to cart.')
     return
   }
-  cartCount += Number((document.getElementById('quantitySelect') as HTMLSelectElement).value)
-  updateIconCounters()
+
+  const qty = Number((document.getElementById('quantitySelect') as HTMLSelectElement).value)
+  addProductToCart(selectedProduct.id, selectedSize, qty)
   alert(`Added ${selectedProduct.club} (${selectedSize}) to cart.`)
 })
 
@@ -343,11 +507,11 @@ adminToggle.addEventListener('click', () => {
     alert('Please log in or register before checkout.')
     return
   }
-  alert('Payment flow initiated.')
+  showPage('cart')
 })
 
 ;(document.getElementById('backToDeals') as HTMLButtonElement).addEventListener('click', () => {
-  openCatalogPage()
+  showPage('catalog')
 })
 
 const searchForm = document.getElementById('searchForm') as HTMLFormElement

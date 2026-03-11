@@ -94,15 +94,37 @@ body {
 .size-dialog { border: 2px solid #1d486e; border-radius: 12px; padding: 20px; max-width: 420px; }
 .size-dialog::backdrop { background: rgba(0,0,0,.35); }
 
+
+
+.page-panel { padding: 34px 0 50px; }
+.page-panel h2 { margin: 0 0 8px; font-size: 2.2rem; }
+.page-panel > p { margin: 0 0 18px; color: var(--muted); }
+.list-wrap { border: 2px solid var(--line); border-radius: 14px; box-shadow: 4px 6px 0 #167664; background: rgba(244,242,232,.98); padding: 14px; }
+.list-item { display: grid; grid-template-columns: 96px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #d9dfda; }
+.list-item:last-child { border-bottom: 0; }
+.list-item img { width: 96px; height: 96px; object-fit: cover; border-radius: 10px; }
+.list-item h3 { margin: 0 0 6px; font-size: 1.3rem; }
+.list-item p { margin: 2px 0; color: #566d61; }
+.list-actions { display: flex; flex-direction: column; gap: 8px; min-width: 110px; }
+.empty-copy { color: #6b7f74; margin: 6px 0; }
+.cart-total { margin-top: 14px; font-weight: 800; font-size: 1.1rem; }
+.account-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.simple-card { border: 2px solid var(--line); border-radius: 12px; box-shadow: 4px 6px 0 #167664; background: rgba(244,242,232,.98); padding: 16px; }
+.simple-card h3 { margin: 0 0 8px; }
+.simple-card p { margin: 6px 0; color: #577466; }
+
 @media (max-width: 1024px) {
   .card-grid { grid-template-columns: 1fr 1fr; }
   .checkout-heads, .checkout-grid { grid-template-columns: 1fr; }
+  .account-grid { grid-template-columns: 1fr 1fr; }
   .admin-form { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 680px) {
   .icon-btn { font-size: 15px; }
   .section-head { flex-direction: column; align-items: flex-start; }
-  .card-grid, .admin-form { grid-template-columns: 1fr; }
+  .card-grid, .admin-form, .account-grid { grid-template-columns: 1fr; }
+  .list-item { grid-template-columns: 1fr; }
+  .list-actions { flex-direction: row; min-width: 0; }
   .search-shell { flex-direction: column; }
 }
