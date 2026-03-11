@@ -14,12 +14,8 @@ type Product = {
   image: string
 }
 
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 type AppPage = 'catalog' | 'checkout' | 'favorites' | 'cart' | 'account' | 'auth'
 type AuthMode = 'signin' | 'register'
-=======
-type AppPage = 'catalog' | 'checkout' | 'favorites' | 'cart' | 'account'
->>>>>>> master
 
 type CartItem = {
   productId: number
@@ -244,7 +240,6 @@ app.innerHTML = `
           </article>
         </div>
       </section>
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 
       <section class="auth-page container" id="authPage" hidden>
         <div class="auth-card">
@@ -280,8 +275,6 @@ app.innerHTML = `
           <div class="auth-footer-links">About Us <span>|</span> FAQs <span>|</span> Contact <span>|</span> Privacy Policy</div>
         </div>
       </section>
-=======
->>>>>>> master
     </main>
   </div>
 
@@ -299,17 +292,10 @@ const searchButton = document.getElementById('searchButton') as HTMLButtonElemen
 const cartButton = document.getElementById('cartButton') as HTMLButtonElement
 const favoritesButton = document.getElementById('favoritesButton') as HTMLButtonElement
 const accountButton = document.getElementById('accountButton') as HTMLButtonElement
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
 const adminPanel = document.getElementById('adminPanel') as HTMLElement
 const accountStateText = document.getElementById('accountStateText') as HTMLElement
 const signOutButton = document.getElementById('signOutButton') as HTMLButtonElement
-=======
-const authToggle = document.getElementById('authToggle') as HTMLButtonElement
-const adminToggle = document.getElementById('adminToggle') as HTMLButtonElement
-const adminPanel = document.getElementById('adminPanel') as HTMLElement
-const accountStateText = document.getElementById('accountStateText') as HTMLElement
->>>>>>> master
 
 const pages: Record<AppPage, HTMLElement> = {
   catalog: document.getElementById('catalogPage') as HTMLElement,
@@ -317,10 +303,7 @@ const pages: Record<AppPage, HTMLElement> = {
   favorites: document.getElementById('favoritesPage') as HTMLElement,
   cart: document.getElementById('cartPage') as HTMLElement,
   account: document.getElementById('accountPage') as HTMLElement,
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
   auth: document.getElementById('authPage') as HTMLElement,
-=======
->>>>>>> master
 }
 
 const favoritesList = document.getElementById('favoritesList') as HTMLElement
@@ -335,14 +318,11 @@ let selectedSize = 'S'
 const favoriteIds = new Set<number>()
 const cartItems: CartItem[] = []
 
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 const setAuthMode = (mode: AuthMode) => {
   ;(document.getElementById('signInView') as HTMLElement).hidden = mode !== 'signin'
   ;(document.getElementById('registerView') as HTMLElement).hidden = mode !== 'register'
 }
 
-=======
->>>>>>> master
 const showPage = (page: AppPage) => {
   Object.values(pages).forEach((section) => {
     section.hidden = true
@@ -353,11 +333,7 @@ const showPage = (page: AppPage) => {
   if (page === 'catalog' || page === 'checkout') homeButton.classList.add('active')
   if (page === 'favorites') favoritesButton.classList.add('active')
   if (page === 'cart') cartButton.classList.add('active')
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
   if (page === 'account' || page === 'auth') accountButton.classList.add('active')
-=======
-  if (page === 'account') accountButton.classList.add('active')
->>>>>>> master
 
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -491,10 +467,7 @@ renderSummary()
 renderFavorites()
 renderCart()
 updateIconCounters()
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 setAuthMode('signin')
-=======
->>>>>>> master
 
 homeButton.addEventListener('click', () => showPage('catalog'))
 searchButton.addEventListener('click', () => showPage('catalog'))
@@ -506,7 +479,6 @@ cartButton.addEventListener('click', () => {
   renderCart()
   showPage('cart')
 })
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 accountButton.addEventListener('click', () => {
   if (!isLoggedIn) {
     setAuthMode('signin')
@@ -515,9 +487,6 @@ accountButton.addEventListener('click', () => {
   }
   showPage('account')
 })
-=======
-accountButton.addEventListener('click', () => showPage('account'))
->>>>>>> master
 
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
@@ -564,12 +533,8 @@ document.addEventListener('click', (event) => {
 
 adminToggle.addEventListener('click', () => {
   if (!isLoggedIn) {
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
     setAuthMode('signin')
     showPage('auth')
-=======
-    alert('Log in first to access the admin portal.')
->>>>>>> master
     return
   }
   isAdmin = !isAdmin
@@ -578,7 +543,6 @@ adminToggle.addEventListener('click', () => {
   showPage('catalog')
 })
 
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
 signOutButton.addEventListener('click', () => {
   isLoggedIn = false
   accountStateText.textContent = 'You are currently signed out.'
@@ -615,14 +579,6 @@ registerPassword.addEventListener('input', () => {
     const item = bar as HTMLElement
     item.classList.toggle('active', i < score + 1)
   })
-=======
-authToggle.addEventListener('click', () => {
-  isLoggedIn = !isLoggedIn
-  authToggle.textContent = isLoggedIn ? 'Sign Out' : 'Sign In'
-  accountStateText.textContent = isLoggedIn
-    ? 'You are signed in and can checkout.'
-    : 'You are currently signed out.'
->>>>>>> master
 })
 
 ;(document.getElementById('favoriteSelected') as HTMLButtonElement).addEventListener('click', () => {
@@ -637,12 +593,8 @@ authToggle.addEventListener('click', () => {
 
 ;(document.getElementById('addSelectedToCart') as HTMLButtonElement).addEventListener('click', () => {
   if (!isLoggedIn) {
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
     setAuthMode('signin')
     showPage('auth')
-=======
-    alert('Please log in or register before adding to cart.')
->>>>>>> master
     return
   }
 
@@ -653,12 +605,8 @@ authToggle.addEventListener('click', () => {
 
 ;(document.getElementById('payButton') as HTMLButtonElement).addEventListener('click', () => {
   if (!isLoggedIn) {
-<<<<<<< codex/pull-latest-changes-from-repository-nr06h2
     setAuthMode('signin')
     showPage('auth')
-=======
-    alert('Please log in or register before checkout.')
->>>>>>> master
     return
   }
   showPage('cart')
